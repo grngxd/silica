@@ -1,0 +1,12 @@
+{
+  "name": "silica",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsx ./scripts/build.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "jsx": "react",
+        "jsxFactory": "h",
+        "jsxFragmentFactory": "Fragment",
+        "outDir": "./out",
+        "rootDir": "./packages",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+        "paths": {
+            "+*": ["./packages/*"],
+            // "+*": ["./packages/silica/*"],
+            // "-*": ["./packages/cli/*"],
+            // "@*": ["./packages/*"],
+        }
+    },
+    "include": [
+        "packages/**/*",
+        "packages/scripts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "out",
+        "packages/*/node_modules",
+        "packages/*/out",
+        "packages/scripts"
+    ]
+}
