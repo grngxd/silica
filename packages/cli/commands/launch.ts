@@ -15,6 +15,10 @@ const cliFlags: { [key: string]: CliFlag } = {
     bypass: {
         name: "bypass",
         description: "Bypass confirmation prompt",
+    },
+    path: {
+        name: "path",
+        description: "Path to Silica bundle",
     }
 };
 
@@ -156,8 +160,8 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             log.error(error.stderr || error.message);
             process.exit(1);
         }
-
-        await inject(false, fs.readFileSync(path.join(__dirname, "../../silica/out/silica.js")));
+        let script = flags.path ? fs.readFileSync(flags.path) : `alert("silica (hardcoded)");`;
+        await inject(false, script);
     } else {
         s.stop("No Discord client selected.", 1);
         process.exit(1);
