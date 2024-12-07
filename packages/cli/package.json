@@ -6,6 +6,9 @@
   "files": [
     "out"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "out/index.js",
   "bin": {
     "silica-cli": "out/index.js"
@@ -35,5 +38,5 @@
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
-  "gitHead": "f9d8326586ff65f3ec75087f2ec588b6ea6ff973"
+  "gitHead": "6dd5ce41d5e11c864944f10f92a8f282a19ee502"
 }
