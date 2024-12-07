@@ -1,10 +1,11 @@
 {
-  "name": "silica",
+  "name": "@grng/silica",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsx ./scripts/build.ts"
+    "build": "tsx ./scripts/build-discord.ts",
+    "prepublishOnly": "tsx ../scripts/prebuild.ts && tsc && tsc-alias"
   },
   "keywords": [],
   "author": "",

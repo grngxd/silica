@@ -1,11 +1,15 @@
 {
-  "name": "cli",
+  "name": "@grng/silica-cli",
   "module": "esm",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "files": ["out"],
+  "main": "out/index.js",
+  "bin": {
+    "silica-cli": "out/index.js"
+  },
   "scripts": {
-    "build": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "tsx ./packages/scripts/prebuild.ts && tsc && tsc-alias"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +29,8 @@
     "@types/child-process-promise": "^2.2.6",
     "@types/glob": "^8.1.0",
     "@types/minimist": "^1.2.5",
-    "@types/ws": "^8.5.13"
+    "@types/ws": "^8.5.13",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   }
 }

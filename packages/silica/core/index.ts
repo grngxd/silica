@@ -1,1 +1,2 @@
-alert("silica");
+const s = "silica";
+alert(s);
