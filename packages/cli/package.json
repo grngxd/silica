@@ -1,7 +1,6 @@
 {
   "name": "@grng/silica-cli",
-  "type": "module",
-  "module": "esm",
+  "type": "commonjs",
   "version": "1.0.14",
   "description": "",
   "files": [
@@ -13,7 +12,7 @@
   "main": "out/index.js",
   "bin": "out/index.js",
   "scripts": {
-    "prepublishOnly": "tsc && tsc-alias"
+    "prepublishOnly": "tsx ./scripts/build.ts"
   },
   "keywords": [],
   "author": "",
