@@ -1,12 +1,30 @@
 {
   "name": "cli",
+  "module": "esm",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@clack/prompts": "^0.8.2",
+    "axios": "^1.7.9",
+    "child-process-promise": "^2.2.1",
+    "commander": "^12.1.0",
+    "glob": "^11.0.0",
+    "minimist": "^1.2.8",
+    "picocolors": "^1.1.1",
+    "shelljs": "^0.8.5",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/child-process-promise": "^2.2.6",
+    "@types/glob": "^8.1.0",
+    "@types/minimist": "^1.2.5",
+    "@types/ws": "^8.5.13"
+  }
 }

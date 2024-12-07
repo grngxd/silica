@@ -1,1 +1,1 @@
-console.log("silica");
+alert("silica");
