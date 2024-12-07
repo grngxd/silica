@@ -136,6 +136,7 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
 
     const bypass = flags.bypass !== undefined ? flags.bypass : await confirm({
         message: "Are you sure you want to launch Discord?",
+        initialValue: false,
     })
 
     if (!bypass) {
@@ -166,15 +167,16 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             process.exit(1);
         }
         // TODO: fetch silica from remote
-        let script = flags.path ? fs.readFileSync(flags.path) : await fetch("https://github.com/grngxd/silica/releases/download/latest/silica.js")
+        let script = flags.path ? fs.readFileSync(flags.path).toString() : await fetch("https://github.com/grngxd/silica/releases/latest/download/silica.js")
         .then(res => res.text())
         .catch(err => {
             s.stop("Failed to fetch Silica bundle.", 1);
             log.error(err);
             process.exit(1);
         });
-        
-        await inject(false, script);
+
+        log.info(script);
+        await inject(true, script);
     } else {
         s.stop("No Discord client selected.", 1);
         process.exit(1);

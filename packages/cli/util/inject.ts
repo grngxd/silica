@@ -1,7 +1,7 @@
 import axios from 'axios';
 import WebSocket from 'ws';
 
-export const inject = async (log = false, code: Buffer | string) => {
+export const inject = async (log = false, code: string) => {
     const maxAttempts = 12;
     const delay = 5000; // 5 seconds
 
@@ -10,7 +10,7 @@ export const inject = async (log = false, code: Buffer | string) => {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
             const res = await axios.get("http://127.0.0.1:4444/json");
-            wsURL = res.data[res.data.length - 1].webSocketDebuggerUrl;
+            wsURL = (res.data as any[]).filter((data) => !(data.url as string).startsWith("file:///"))[res.data.length - 1].webSocketDebuggerUrl;
             if (log) console.log("WebSocket Address:", wsURL);
             break; // Exit loop on successful fetch
         } catch (error) {
@@ -47,7 +47,7 @@ export const inject = async (log = false, code: Buffer | string) => {
                     id: 1,
                     method: "Runtime.evaluate",
                     params: {
-                        expression: code.toString(),
+                        expression: code,
                     }
                 };
 
