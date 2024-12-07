@@ -1,7 +1,7 @@
 {
   "name": "@grng/silica-cli",
   "type": "commonjs",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "",
   "files": [
     "out"
