@@ -166,7 +166,7 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             log.error(error.stderr || error.message);
             process.exit(1);
         }
-        // TODO: fetch silica from remote
+
         let script = flags.path ? fs.readFileSync(flags.path).toString() : await fetch("https://github.com/grngxd/silica/releases/latest/download/silica.js")
         .then(res => res.text())
         .catch(err => {
