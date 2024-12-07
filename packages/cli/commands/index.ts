@@ -1,2 +1,2 @@
-export { default } from './launch';
+export { default as launch } from './launch';
 

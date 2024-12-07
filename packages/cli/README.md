@@ -1,0 +1,1 @@
+`npx @grng/silica-cli@latest`
