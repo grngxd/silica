@@ -8,6 +8,7 @@
   "main": "out/index.js",
   "scripts": {
     "build": "tsx ./scripts/build-discord.ts",
+    "watch": "tsx watch ./scripts/build-discord.ts --watch",
     "prepublishOnly": "tsc && tsc-alias"
   },
   "keywords": [],

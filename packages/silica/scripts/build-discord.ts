@@ -1,5 +1,7 @@
+import { inject } from '+cli/util/inject';
 import { prebuild } from '+scripts/prebuild';
 import { context } from 'esbuild';
+import { readFileSync } from 'fs';
 
 const args = process.argv.slice(2);
 const watchMode = args.includes('--watch');
@@ -18,7 +20,7 @@ const watchMode = args.includes('--watch');
             setup(build) {
                 build.onEnd(result => {
                     console.log(`Build Complete. ${result.errors.length} errors, ${result.warnings.length} warnings`);
-                    if (watchMode) return // inject to discord
+                    if (watchMode) return inject(true, readFileSync('./out/silica.js').toString());
                     else {
                         process.exit(0);
                     }
