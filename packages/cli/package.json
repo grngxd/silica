@@ -12,7 +12,7 @@
   },
   "main": "out/index.js",
   "bin": {
-    "silica-cli": "out/index.js"
+    "@grng/silica-cli": "out/index.js"
   },
   "scripts": {
     "prepublishOnly": "tsc && tsc-alias"
