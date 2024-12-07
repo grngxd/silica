@@ -24,7 +24,7 @@ jobs:
         run: pnpm install
 
       - name: Build Silica
-        run: pnpm run build:silica
+        run: cd packages/silica && pnpm run build && cd ../..
 
       - name: Check if Release Exists
         id: check_release
