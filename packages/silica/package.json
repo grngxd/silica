@@ -1,8 +1,10 @@
 {
   "name": "@grng/silica",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
-  "files": ["out"],
+  "files": [
+    "out"
+  ],
   "main": "out/index.js",
   "scripts": {
     "build": "tsx ./scripts/build-discord.ts",

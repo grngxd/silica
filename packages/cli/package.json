@@ -1,7 +1,7 @@
 {
   "name": "@grng/silica-cli",
   "module": "esm",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "files": [
     "out"
