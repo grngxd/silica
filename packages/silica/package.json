@@ -8,7 +8,7 @@
   "main": "out/index.js",
   "scripts": {
     "build": "tsx ./scripts/build-discord.ts",
-    "prepublishOnly": "tsx ../scripts/prebuild.ts && tsc && tsc-alias"
+    "prepublishOnly": "tsc && tsc-alias"
   },
   "keywords": [],
   "author": "",

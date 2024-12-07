@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepublishOnly": "tsx ./packages/scripts/prebuild.ts && tsc && tsc-alias"
+    "prepublishOnly": "tsx ../scripts/prebuild.ts"
   },
   "keywords": [],
   "author": "",
