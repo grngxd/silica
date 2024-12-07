@@ -11,9 +11,7 @@
     "access": "public"
   },
   "main": "out/index.js",
-  "bin": {
-    "@grng/silica-cli": "out/index.js"
-  },
+  "bin": "out/index.js",
   "scripts": {
     "prepublishOnly": "tsc && tsc-alias"
   },
