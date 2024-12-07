@@ -1,9 +1,11 @@
 {
   "name": "@grng/silica-cli",
   "module": "esm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "files": ["out"],
+  "files": [
+    "out"
+  ],
   "main": "out/index.js",
   "bin": {
     "silica-cli": "out/index.js"
