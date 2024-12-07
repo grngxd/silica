@@ -175,8 +175,7 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             process.exit(1);
         });
 
-        log.info(script);
-        await inject(true, script);
+        await inject(false, script);
     } else {
         s.stop("No Discord client selected.", 1);
         process.exit(1);
