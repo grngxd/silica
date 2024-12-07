@@ -11,7 +11,7 @@
     "silica-cli": "out/index.js"
   },
   "scripts": {
-    "prepublishOnly": "tsx ./packages/scripts/prebuild.ts && tsc && tsc-alias"
+    "prepublishOnly": "tsx ../scripts/prebuild.ts && tsc && tsc-alias"
   },
   "keywords": [],
   "author": "",
@@ -34,5 +34,6 @@
     "@types/ws": "^8.5.13",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  }
+  },
+  "gitHead": "3a6ab2c3e199b1e54cd8dc2a2602554c8cf13d52"
 }
