@@ -14,13 +14,13 @@ const watchMode = args.includes('--watch');
         platform: 'browser',
         target: 'ES2020',
         format: 'iife',
-        minify: true,
+        // minify: true,
         plugins: [{
             name: 'rebuild-notify',
             setup(build) {
                 build.onEnd(result => {
                     console.log(`Build Complete. ${result.errors.length} errors, ${result.warnings.length} warnings`);
-                    if (watchMode) return inject(true, readFileSync('./out/silica.js').toString());
+                    if (watchMode)  inject(true, readFileSync('./out/silica.js').toString());
                     else {
                         process.exit(0);
                     }

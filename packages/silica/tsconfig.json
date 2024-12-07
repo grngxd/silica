@@ -1,9 +1,9 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "rootDir": "../..", // Set to the root of the monorepo
+        "rootDir": "../..",
         "outDir": "out"
     },
-    "include": ["../../packages/**/*"], // Include all packages
+    "include": ["../../packages/**/*"],
     "exclude": ["node_modules", "out"]
 }
