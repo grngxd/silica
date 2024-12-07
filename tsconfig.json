@@ -16,9 +16,7 @@
         "baseUrl": ".",
         "paths": {
             "+*": ["./packages/*"],
-            // "+*": ["./packages/silica/*"],
-            // "-*": ["./packages/cli/*"],
-            // "@*": ["./packages/*"],
+            "+scripts/*": ["./packages/scripts/*"]
         }
     },
     "include": [
@@ -29,7 +27,6 @@
         "node_modules",
         "out",
         "packages/*/node_modules",
-        "packages/*/out",
-        "packages/scripts"
+        "packages/*/out"
     ]
 }

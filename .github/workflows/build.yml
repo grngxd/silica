@@ -1,0 +1,50 @@
+name: Release Silica
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Build Silica
+        run: pnpm run build:silica
+
+      - name: Check if Release Exists
+        id: check_release
+        run: |
+          curl -s \
+            -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} \
+            | jq -r '.id'
+
+      - name: Create or Update Release
+        id: create_update_release
+        run: |
+          if [ "${{ steps.check_release.outputs.id }}" != "null" ]; then
+            echo "Release exists, updating..."
+            gh release upload ${{ github.ref_name }} packages/silica/out/silica.js --clobber
+          else
+            echo "Release does not exist, creating..."
+            gh release create ${{ github.ref_name }} packages/silica/out/silica.js -t "Release ${{ github.ref_name }}"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

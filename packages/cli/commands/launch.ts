@@ -68,7 +68,12 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             path.join(os.homedir(), "AppData", "Local", "DiscordCanary"),
             "/Applications/Discord Canary.app/Contents/MacOS/Discord Canary",
             "/usr/share/discord-canary/DiscordCanary",
-        ]
+        ],
+        ptb: [
+            path.join(os.homedir(), "AppData", "Local", "DiscordPTB"),
+            "/Applications/Discord PTB.app/Contents/MacOS/Discord PTB",
+            "/usr/share/discord-ptb/DiscordPTB",
+        ],
     }
 
     let paths = {
@@ -160,6 +165,7 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             log.error(error.stderr || error.message);
             process.exit(1);
         }
+        // TODO: fetch silica from remote
         let script = flags.path ? fs.readFileSync(flags.path) : `alert("silica (hardcoded)");`;
         await inject(false, script);
     } else {
