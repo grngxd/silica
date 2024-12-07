@@ -166,7 +166,14 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             process.exit(1);
         }
         // TODO: fetch silica from remote
-        let script = flags.path ? fs.readFileSync(flags.path) : `alert("silica (hardcoded)");`;
+        let script = flags.path ? fs.readFileSync(flags.path) : await fetch("https://github.com/grngxd/silica/releases/download/latest/silica.js")
+        .then(res => res.text())
+        .catch(err => {
+            s.stop("Failed to fetch Silica bundle.", 1);
+            log.error(err);
+            process.exit(1);
+        });
+        
         await inject(false, script);
     } else {
         s.stop("No Discord client selected.", 1);
