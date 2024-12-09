@@ -25,8 +25,6 @@ export const init = () => {
             save(value);
         });
     }
-
-    console.log("settings", parsed);
 }
 
 export const save = (value: any) => {
