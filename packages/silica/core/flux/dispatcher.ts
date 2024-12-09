@@ -1,5 +1,6 @@
 import { Patcher } from "+silica/core/patcher";
 import type { Dispatcher } from "+silica/types/flux/dispatcher";
+import settings from "../settings";
 import { getWebpackChunkByExports } from "../webpack";
 
 const patcher = new Patcher();
@@ -24,7 +25,7 @@ export const getDispatcher = (force = false): Dispatcher => {
         "dispatch",
         (originalMethod) => {
             return function (this: Dispatcher, action: any) {
-                console.log(`[DISPATCHER] ${action.type}`, action);
+                if (settings.$logFluxDispatches.get()) console.log(`[DISPATCHER] ${action.type}`, action);
                 return originalMethod.call(this, action);   
             };
         }
@@ -34,7 +35,7 @@ export const getDispatcher = (force = false): Dispatcher => {
 };
 
 export const unload = () => {
-    patcher.removeAllPatches();
+    patcher.removeAllPatches(); 
 }; 
 
 const api = getDispatcher;

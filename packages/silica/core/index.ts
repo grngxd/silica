@@ -3,21 +3,28 @@ if (window.silica) {
 }
 
 // all *API are exposed to the window & plugins
+import storageAPI, * as storage from "./electron/storage";
 import dispatcherAPI, * as dispatcher from "./flux/dispatcher";
+import settingsAPI, * as settings from "./settings";
 import webpackAPI from "./webpack";
+
 
 const start = performance.now() / 1000;
 
+storage.init();
 dispatcher.init();
+settings.init();
     
-export const api = {
+export const api: SilicaApi = {
     webpack: webpackAPI,
     dispatcher: dispatcherAPI,
+    storage: storageAPI,
+    settings: settingsAPI,
     unload: () => {
         window.silica = undefined;
-
+        dispatcher.unload();
         Promise.all([
-            dispatcher.unload(),
+            storage.unload()
         ]).then(() => {
             console.log('silica unloaded!');
         });
@@ -25,9 +32,11 @@ export const api = {
 }
 
 export type SilicaApi = {
-    webpack: typeof import("./webpack").default;
-    dispatcher: typeof import("./flux/dispatcher").default;
-    unload: () => void;
+    webpack: typeof webpackAPI,
+    dispatcher: typeof dispatcherAPI,
+    storage: typeof storageAPI,
+    settings: typeof settingsAPI,
+    unload: () => void
 };
 
 window.silica = api;
