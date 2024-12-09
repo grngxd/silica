@@ -1,7 +1,7 @@
 import { inject } from '+cli/util/inject';
 import { prebuild } from '+scripts/prebuild';
 import { context } from 'esbuild';
-import { readFileSync } from 'fs';
+import { readFileSync } from 'node:fs';
 
 const args = process.argv.slice(2);
 const watchMode = args.includes('--watch');

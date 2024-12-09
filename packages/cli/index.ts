@@ -8,7 +8,7 @@ import {
 import minimist from "minimist";
 import color from "picocolors";
 import * as cmds from "./commands";
-import { CliCommand } from "./types";
+import type { CliCommand } from "./types";
 
 const init = performance.now();
 
@@ -45,7 +45,7 @@ function showHelp() {
     log.info("Usage: silica-cli <command> [options]");
     const commandsTxt = `Commands:\n${Object.keys(typedCmds).map(cmd => {
         const command = typedCmds[cmd];
-        const flagsTxt = command.flags ? command.flags.map(flag => `    ${flag.required == true ? "*" : ""}--${flag.name}: ${flag.description}`).join("\n") : "";
+        const flagsTxt = command.flags ? command.flags.map(flag => `    ${flag.required === true ? "*" : ""}--${flag.name}: ${flag.description}`).join("\n") : "";
         return `  ${cmd}: ${command.description}\n${flagsTxt}`;
     }).join("\n")}`;
     log.info(commandsTxt);

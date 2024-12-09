@@ -2,17 +2,36 @@ if (window.silica) {
     window.silica.unload();
 }
 
+// all *API are exposed to the window & plugins
+import dispatcherAPI, * as dispatcher from "./flux/dispatcher";
+import webpackAPI from "./webpack";
+
 const start = performance.now() / 1000;
+
+dispatcher.init();
     
-const api = {
+export const api = {
+    webpack: webpackAPI,
+    dispatcher: dispatcherAPI,
     unload: () => {
-        Promise.all([ /* ... */ ]).then(() => {
-            window.silica = undefined;
+        window.silica = undefined;
+
+        Promise.all([
+            dispatcher.unload(),
+        ]).then(() => {
             console.log('silica unloaded!');
         });
     }
 }
 
+export type SilicaApi = {
+    webpack: typeof import("./webpack").default;
+    dispatcher: typeof import("./flux/dispatcher").default;
+    unload: () => void;
+};
+
 window.silica = api;
-alert(`silica loaded in ${parseFloat(((performance.now() / 1000) - start).toFixed(2))}s`);
-console.log(`silica loaded in ${parseFloat(((performance.now() / 1000) - start).toFixed(2))}s`);
+
+const now = performance.now() / 1000;
+alert(`silica loaded in ${Number.parseFloat((now - start).toFixed(2))}s`);
+console.log(`silica loaded in ${Number.parseFloat((now - start).toFixed(2))}s`);
