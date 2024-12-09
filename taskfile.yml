@@ -1,0 +1,6 @@
+# taskfile.yml
+version: '3'
+tasks:
+  publish:
+    cmds:
+      - pnpx lerna publish --no-private --concurrency 1
