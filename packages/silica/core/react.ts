@@ -1,10 +1,11 @@
-import type { React, ReactDOM, ReactFiber } from "+silica/types/react";
+import type { React, ReactDOM, ReactFiber, ReactFiberOwner } from "+silica/types/react";
 import { type Attributes, type ComponentType, type VNode, h, render } from "preact";
 import { getWebpackChunkByExports } from "./webpack";
 
 export let react: React | undefined;
 export let reactDOM: ReactDOM | undefined;
-const fibers: Map<Element, [string, ReactFiber]> = new Map();
+const fibers: Map<Element, ReactFiber> = new Map();
+const fiberOwners: Map<Element | ReactFiber, ReactFiberOwner> = new Map();
 
 export const init = (force = false) => {
     if ((react && reactDOM) && !force) return [react, reactDOM];
@@ -74,14 +75,14 @@ export const renderPreactInReact = <P extends {} = {}>(
     });
 };
 
-export const getFiber = (element: Element, force = false): [string, ReactFiber] | undefined => {
+export const getFiber = (element: Element, force = false): ReactFiber | undefined => {
     if (!react || !reactDOM) throw new Error("React or ReactDOM not found");
 
     if (fibers.has(element) && !force) {
         return fibers.get(element);
     }
 
-    const fiber = Object.entries(element).find(([k, v]) => k.startsWith("__reactFiber$"));
+    const fiber = Object.entries(element).find(([k, v]) => k.startsWith("__reactFiber$"))?.[1] as ReactFiber;
     if (fiber) {
         fibers.set(element, fiber);
         return fiber;
@@ -90,16 +91,65 @@ export const getFiber = (element: Element, force = false): [string, ReactFiber] 
     return undefined;
 };
 
+export const getFiberOwner = (n: Element | ReactFiber, refresh = false): ReactFiberOwner | undefined | null => {
+    if (fiberOwners.has(n) && !refresh) return fiberOwners.get(n);
+
+    const filter = (node: ReactFiber) => node.stateNode && !(node.stateNode instanceof Element);
+    const fiber = n instanceof Element ? getFiber(n, refresh) : n;
+
+    if (!fiber) return undefined;
+
+    const ownerFiber = reactFiberWalker(fiber, filter, true, false, 100);
+    const owner = ownerFiber?.stateNode as ReactFiberOwner | undefined | null;
+
+    if (owner) {
+        fiberOwners.set(n, owner);
+    }
+
+    return owner;
+};
+
+export function reactFiberWalker(
+    node: ReactFiber,
+    filter: string | symbol | ((node: ReactFiber) => boolean),
+    goUp = false,
+    ignoreStringType = false,
+    recursionLimit = 100,
+): ReactFiber | undefined | null {
+    if (recursionLimit === 0) return undefined;
+
+    if (typeof filter !== "function") {
+        const prop = filter;
+        filter = (n: ReactFiber) => n?.pendingProps?.[prop] !== undefined;
+    }
+
+    if (!node) return undefined;
+    if (filter(node) && (ignoreStringType ? typeof node.type !== "string" : true)) return node;
+
+    const nextNode = goUp ? node.return : node.child;
+    if (nextNode) {
+        const result = reactFiberWalker(nextNode, filter, goUp, ignoreStringType, recursionLimit - 1);
+        if (result) return result;
+    }
+
+    if (node.sibling) {
+        const result = reactFiberWalker(node.sibling, filter, goUp, ignoreStringType, recursionLimit - 1);
+        if (result) return result;
+    }
+
+    return undefined;
+}
+
 
 const api = {
     react,
     reactDOM,
     renderPreactInReact,
-    getFiber
 }
 
 export const fiberAPI = {
-    getFiber
+    getFiber,
+    getFiberOwner
 }
 
 export default api;

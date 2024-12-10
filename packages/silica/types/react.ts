@@ -23,3 +23,9 @@ export type ReactFiber = {
     sibling?: ReactFiber;
     pendingProps?: any;
 }
+
+export type ReactFiberOwner = {
+    stateNode: any;
+    forceUpdate: () => void;
+    props: any;
+}
