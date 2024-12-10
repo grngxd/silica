@@ -2,17 +2,19 @@ if (window.silica) {
     window.silica.unload();
 }
 
+import * as preact from "preact";
 // all *API are exposed to the window & plugins
 import storageAPI, * as storage from "./electron/storage";
 import dispatcherAPI, * as dispatcher from "./flux/dispatcher";
+import reactAPI, * as react from "./react";
 import settingsAPI, * as settings from "./settings";
 import webpackAPI from "./webpack";
-
 
 const start = performance.now() / 1000;
 
 storage.init();
 dispatcher.init();
+react.init();
 settings.init();
     
 export const api: SilicaApi = {
@@ -20,6 +22,8 @@ export const api: SilicaApi = {
     dispatcher: dispatcherAPI,
     storage: storageAPI,
     settings: settingsAPI,
+    react: reactAPI,
+    preact,
     unload: () => {
         window.silica = undefined;
         dispatcher.unload();
@@ -36,6 +40,8 @@ export type SilicaApi = {
     dispatcher: typeof dispatcherAPI,
     storage: typeof storageAPI,
     settings: typeof settingsAPI,
+    react: typeof reactAPI,
+    preact: typeof preact,
     unload: () => void
 };
 

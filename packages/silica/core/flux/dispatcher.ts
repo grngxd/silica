@@ -25,7 +25,7 @@ export const getDispatcher = (force = false): Dispatcher => {
         "dispatch",
         (originalMethod) => {
             return function (this: Dispatcher, action: any) {
-                if (settings.$logFluxDispatches.get()) console.log(`[DISPATCHER] ${action.type}`, action);
+                if (settings.$logDispatches.get()) console.log(`[DISPATCHER] ${action.type}`, action);
                 return originalMethod.call(this, action);   
             };
         }

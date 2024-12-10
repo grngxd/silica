@@ -3,7 +3,7 @@ import { type WritableAtom, atom } from 'nanostores';
 const LOCAL_KEY = "SILICA_SETTINGS";
 
 export const settings = {
-    $logFluxDispatches: atom<boolean>(false) as WritableAtom<boolean>,
+    $logDispatches: atom<boolean>(false) as WritableAtom<boolean>,
 };
 
 const defaultSettings = Object.fromEntries(Object.entries(settings).map(([k, v]) => [k, v.get()]));
