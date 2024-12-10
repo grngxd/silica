@@ -3,6 +3,7 @@ if (window.silica) {
 }
 
 import * as preact from "preact";
+import * as discordSettings from "./discord/settings";
 // all *API are exposed to the window & plugins
 import storageAPI, * as storage from "./electron/storage";
 import dispatcherAPI, * as dispatcher from "./flux/dispatcher";
@@ -16,6 +17,7 @@ storage.init();
 dispatcher.init();
 react.init();
 settings.init();
+discordSettings.init();
     
 export const api: SilicaApi = {
     webpack: webpackAPI,
@@ -31,6 +33,7 @@ export const api: SilicaApi = {
     fiber: react.fiberAPI,
     unload: () => {
         window.silica = undefined;
+        discordSettings.unload();
         dispatcher.unload();
         Promise.all([
             storage.unload()

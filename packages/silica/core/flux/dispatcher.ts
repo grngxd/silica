@@ -31,6 +31,22 @@ export const getDispatcher = (force = false): Dispatcher => {
         }
     );
 
+    patcher.applyPatch(
+        dispatcher,
+        "waitForDispatch",
+        (originalMethod) => {
+            return async function (this: Dispatcher, event: string) {
+                return new Promise((resolve) => {
+                    const callback = (data: unknown) => {
+                        resolve(data);
+                        this.unsubscribe(event, callback);
+                    };
+                    this.subscribe(event, callback);
+                });
+            };
+        }
+    );
+
     return dispatcher;
 };
 

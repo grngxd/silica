@@ -13,6 +13,10 @@ export type Dispatcher = {
             type: DispatcherEvent | `${DispatcherEvent}` | string;
         } & Record<string, unknown>
     ) => void;
+
+    waitForDispatch: (
+        event: DispatcherEvent | `${DispatcherEvent}` | string
+    ) => Promise<unknown>;
 };
 
 // thanks uwunet

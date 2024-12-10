@@ -8,54 +8,97 @@ export class Patcher {
     }
 
     /**
-     * applyPatch
-     * @param target Object to patch
-     * @param fnName Function to be patched
-     * @param patchedFn Your patched function
-    * @example
-    * const obj = {
-    *     greet(name: string) {
-    *         return `Hello, ${name}!`;
-    *     }
-    * };
-    * 
-    * const patches = new Patches();
-    * const unpatch = patches.applyPatch(obj, 'greet', (originalMethod) => {
-    *     // IMPORTANT!!! Use function instead of arrow function to keep the context of "this"
-    *     return function(name: string) {
-    *         return originalMethod.call(this, name).toUpperCase();
-    *     };
-    * });
-    * 
-    * console.log(obj.greet('world')); // Outputs: HELLO, WORLD!
-    * 
-    * unpatch();
-    * console.log(obj.greet('world')); // Outputs: Hello, world!
-     * @returns Unpatch function
+     * Applies a patch to an existing method of the target object.
+     *
+     * @param target - The object containing the method to patch.
+     * @param fnName - The name of the method to patch.
+     * @param patchedFn - A function that takes the original method and returns the patched method.
+     * @returns A function to unpatch the method.
+     *
+     * @example
+     * ```typescript
+     * const patcher = new Patcher();
+     * 
+     * const obj = {
+     *     greet(name: string): string {
+     *         return `Hello, ${name}!`;
+     *     }
+     * };
+     * 
+     * // Patch the existing 'greet' method
+     * patcher.applyPatch(obj, 'greet', (original) => {
+     *     return function(name: string) {
+     *         return original(name).toUpperCase();
+     *     };
+     * });
+     * 
+     * console.log(obj.greet('world')); // Outputs: HELLO, WORLD!
+     * ```
      */
     applyPatch<T, K extends keyof T>(
         target: T,
         fnName: K,
-        patchedFn: T[K] extends (...args: any[]) => any ? (originalMethod: T[K]) => T[K] : never
+        patchedFn: T[K] extends (...args: any[]) => any
+            ? (originalMethod: T[K]) => T[K]
+            : never
+    ): () => void;
+
+    /**
+     * Adds a new method to the target object.
+     *
+     * @param target - The object to add the new method to.
+     * @param fnName - The name of the new method.
+     * @param patchedFn - A function that returns the new method.
+     * @returns A function to remove the added method.
+     *
+     * @example
+     * ```typescript
+     * const patcher = new Patcher();
+     * 
+     * const obj = {
+     *     greet(name: string): string {
+     *         return `Hello, ${name}!`;
+     *     }
+     * };
+     * 
+     * // Add a new method 'farewell'
+     * patcher.applyPatch(obj, 'farewell', () => {
+     *     return function(name: string) {
+     *         return `Goodbye, ${name}!`;
+     *     };
+     * });
+     * 
+     * console.log((obj as any).farewell('world')); // Outputs: Goodbye, world!
+     * ```
+     */
+    applyPatch<T>(
+        target: T,
+        fnName: string,
+        patchedFn: (originalMethod: undefined) => any
+    ): () => void;
+
+    applyPatch<T>(
+        target: T,
+        fnName: string,
+        patchedFn: any
     ): () => void {
-        const patchName = `${String(fnName)}_${generate()}_${Date.now()}`;
+        const patchName = `${fnName}_${generate()}_${Date.now()}`;
 
         if (this.patches.has(patchName)) {
             return this.applyPatch(target, fnName, patchedFn);
         }
 
-        const originalMethod = target[fnName];
-        if (typeof originalMethod !== "function") {
-            console.error(`Method "${String(fnName)}" is not a function on target object.`);
-            throw new Error(`Method "${String(fnName)}" is not a function on target object.`);
-        }
+        const originalMethod = (target as any)[fnName];
+        const isFunction = typeof originalMethod === "function";
 
-        // Apply the patch
-        target[fnName] = patchedFn(originalMethod as T[K] & ((...args: any[]) => any));
+        (target as any)[fnName] = patchedFn(isFunction ? originalMethod : undefined);
 
-        // Store the unpatch function
         const unpatch = () => {
-            target[fnName] = originalMethod;
+            if (isFunction) {
+                (target as any)[fnName] = originalMethod;
+            } else {
+                delete (target as any)[fnName];
+            }
             this.patches.delete(patchName);
         };
 
@@ -63,8 +106,11 @@ export class Patcher {
         return unpatch;
     }
 
+    /**
+     * Removes all applied patches from the target objects.
+     */
     removeAllPatches(): void {
-        for (const [_, unpatch] of this.patches.entries()) {
+        for (const unpatch of this.patches.values()) {
             unpatch();
         }
         this.patches.clear();
