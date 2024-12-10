@@ -1,4 +1,5 @@
 import type { SilicaApi } from "+silica/core";
+import type { ReactFiber } from "./react";
 import type { WebpackBundle } from "./webpack";
 
 declare global {
@@ -6,6 +7,10 @@ declare global {
         silica: SilicaApi | undefined;
         webpackChunkdiscord_app: WebpackBundle;
         DiscordNative: any;
+    }
+
+    interface Element {
+        [f: `__reactFiber$${string}`]: ReactFiber;
     }
 
     const silica: SilicaApi | null;

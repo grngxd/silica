@@ -22,8 +22,13 @@ export const api: SilicaApi = {
     dispatcher: dispatcherAPI,
     storage: storageAPI,
     settings: settingsAPI,
-    react: reactAPI,
-    preact,
+    react: reactAPI.react,
+    reactDOM: reactAPI.reactDOM,
+    preact: {
+        ...preact,
+        renderPreactInReact: reactAPI.renderPreactInReact
+    },
+    fiber: react.fiberAPI,
     unload: () => {
         window.silica = undefined;
         dispatcher.unload();
@@ -40,10 +45,13 @@ export type SilicaApi = {
     dispatcher: typeof dispatcherAPI,
     storage: typeof storageAPI,
     settings: typeof settingsAPI,
-    react: typeof reactAPI,
-    preact: typeof preact,
+    react: typeof reactAPI.react,
+    reactDOM: typeof reactAPI.reactDOM,
+    preact: typeof preact & { renderPreactInReact: typeof reactAPI.renderPreactInReact },
+    fiber: typeof react.fiberAPI,
     unload: () => void
 };
+
 
 window.silica = api;
 
