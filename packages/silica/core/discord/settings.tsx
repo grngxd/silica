@@ -33,7 +33,7 @@ export const init = () => {
         .waitForDispatch("USER_SETTINGS_MODAL_OPEN")
         .then(async () => {
             // TODO: webpack lazy-loads the settings component, so we need a better way to wait for it to load
-            new Promise((resolve) => setTimeout(resolve, 1500));
+            await new Promise((resolve) => setTimeout(resolve, 1500));
 
             SettingsView = (getWebpackChunkByExports("ZP.prototype.getPredicateSections") as any)?.ZP;
 
