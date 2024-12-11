@@ -1,11 +1,11 @@
 import { inject } from "+cli/util/inject";
 import { confirm, log, outro, select, spinner } from "@clack/prompts";
 import { exec } from "child-process-promise";
-import { spawn } from "child_process";
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { CliCommand, CliFlag } from "../types";
+import { spawn } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import type { CliCommand, CliFlag } from "../types";
 
 const cliFlags: { [key: string]: CliFlag } = {
     client: {
@@ -76,7 +76,7 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
         ],
     }
 
-    let paths = {
+    const paths = {
         stable: "",
         canary: "",
         ptb: ""
@@ -167,7 +167,7 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             process.exit(1);
         }
 
-        let script = flags.path ? fs.readFileSync(flags.path).toString() : await fetch("https://github.com/grngxd/silica/releases/latest/download/silica.js")
+        const script = flags.path ? fs.readFileSync(flags.path).toString() : await fetch("https://github.com/grngxd/silica/releases/latest/download/silica.js")
         .then(res => res.text())
         .catch(err => {
             s.stop("Failed to fetch Silica bundle.", 1);
@@ -175,7 +175,10 @@ const execute = async (argv: string[], flags: { [key: string]: any }) => {
             process.exit(1);
         });
 
-        await inject(false, script);
+        // TODO: if i dont wait the storage getters are undefined, fix it
+        new Promise((resolve) => setTimeout(resolve, 5000)).then(async () => {
+            await inject(true, script);
+        })
     } else {
         s.stop("No Discord client selected.", 1);
         process.exit(1);
