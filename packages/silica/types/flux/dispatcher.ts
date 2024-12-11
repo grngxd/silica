@@ -3,6 +3,7 @@ export type Dispatcher = {
         event: DispatcherEvent | `${DispatcherEvent}` | string,
         callback: (data: unknown) => void
     ) => void;
+
     unsubscribe: (
         event: DispatcherEvent | `${DispatcherEvent}` | string,
         callback: (data: unknown) => void
@@ -16,8 +17,55 @@ export type Dispatcher = {
 
     waitForDispatch: (
         event: DispatcherEvent | `${DispatcherEvent}` | string
-    ) => Promise<unknown>;
+    ) => CancelablePromise<unknown>;
 };
+
+export class CancelablePromise<T> extends Promise<T> {
+    cancel: () => void;
+
+    constructor(
+        executor: (
+            resolve: (value: T | PromiseLike<T>) => void,
+            reject: (reason?: any) => void
+        ) => void,
+        cancelFn: () => void
+    ) {
+        let internalReject!: (reason?: any) => void;
+
+        super((resolve, reject) => {
+            internalReject = reject;
+            executor(resolve, reject);
+        });
+
+        this.cancel = () => {
+            cancelFn();
+        };
+    }
+
+    // biome-ignore lint/suspicious/noThenProperty: <explanation>
+    then<TResult1 = T, TResult2 = never>(
+        onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
+        onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
+    ): CancelablePromise<TResult1 | TResult2> {
+        const chained = super.then(onfulfilled, onrejected) as CancelablePromise<TResult1 | TResult2>;
+        chained.cancel = this.cancel;
+        return chained;
+    }
+
+    catch<TResult = never>(
+        onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null
+    ): CancelablePromise<T | TResult> {
+        const chained = super.catch(onrejected) as CancelablePromise<T | TResult>;
+        chained.cancel = this.cancel;
+        return chained;
+    }
+
+    finally(onfinally?: (() => void) | undefined | null): CancelablePromise<T> {
+        const chained = super.finally(onfinally) as CancelablePromise<T>;
+        chained.cancel = this.cancel;
+        return chained;
+    }
+}
 
 // thanks uwunet
 export enum DispatcherEvent {

@@ -1,5 +1,5 @@
 import { Patcher } from "+silica/core/patcher";
-import type { Dispatcher } from "+silica/types/flux/dispatcher";
+import { CancelablePromise, type Dispatcher } from "+silica/types/flux/dispatcher";
 import settings from "../settings";
 import { getWebpackChunkByExports } from "../webpack";
 
@@ -35,17 +35,29 @@ export const getDispatcher = (force = false): Dispatcher => {
         dispatcher,
         "waitForDispatch",
         (originalMethod) => {
-            return async function (this: Dispatcher, event: string) {
-                return new Promise((resolve) => {
-                    const callback = (data: unknown) => {
-                        resolve(data);
-                        this.unsubscribe(event, callback);
-                    };
-                    this.subscribe(event, callback);
-                });
+            return function (this: Dispatcher, event: string): CancelablePromise<unknown> {
+                let unsubscribeFn: () => void;
+                let rejectFn!: (reason?: any) => void;
+    
+                const promise = new CancelablePromise<unknown>(
+                    (resolve, reject) => {
+                        rejectFn = reject;
+                        const callback = (data: unknown) => {
+                            resolve(data);
+                            if (unsubscribeFn) unsubscribeFn();
+                        };
+                        this.subscribe(event, callback);
+                        unsubscribeFn = () => this.unsubscribe(event, callback);
+                    },
+                    () => {
+                        if (unsubscribeFn) unsubscribeFn();
+                    }
+                );
+    
+                return promise;
             };
         }
-    );
+    ); 
 
     return dispatcher;
 };

@@ -1,3 +1,4 @@
+import type { CancelablePromise } from "+silica/types/flux/dispatcher";
 import { type VNode, h } from "preact";
 import { getDispatcher } from "../flux/dispatcher";
 import { Patcher } from "../patcher";
@@ -21,13 +22,14 @@ type CustomElement = {
 
 let p: Patcher | null = null;
 
+let settingsDispatch: CancelablePromise<unknown>;
 
 export const init = () => {
-    getDispatcher()
+    settingsDispatch = getDispatcher()
         .waitForDispatch("USER_SETTINGS_MODAL_OPEN")
         .then(async () => {
             console.log("Settings modal opened!");
-            SettingsView = (getWebpackChunkByExports("ZP.prototype.getPredicateSections") as any).ZP
+            SettingsView = (getWebpackChunkByExports("ZP.prototype.getPredicateSections") as any)?.ZP
 
             p = new Patcher();
 
@@ -61,6 +63,7 @@ const rerenderSidebar = () => {
 }
 
 export const unload = () => {
+    settingsDispatch?.cancel();
     p?.removeAllPatches();
     rerenderSidebar();
 };
