@@ -3,7 +3,7 @@ if (window.silica) {
 }
 
 import * as preact from "preact";
-import * as discordSettings from "./discord/settings";
+import discordSettingsAPI, * as discordSettings from "./discord/settings";
 // all *API are exposed to the window & plugins
 import storageAPI, * as storage from "./electron/storage";
 import dispatcherAPI, * as dispatcher from "./flux/dispatcher";
@@ -24,6 +24,9 @@ export const api: SilicaApi = {
     dispatcher: dispatcherAPI,
     storage: storageAPI,
     settings: settingsAPI,
+    discord: {
+        settings: discordSettingsAPI
+    },
     react: reactAPI.react,
     reactDOM: reactAPI.reactDOM,
     preact: {
@@ -48,6 +51,9 @@ export type SilicaApi = {
     dispatcher: typeof dispatcherAPI,
     storage: typeof storageAPI,
     settings: typeof settingsAPI,
+    discord: {
+        settings: typeof discordSettingsAPI
+    },
     react: typeof reactAPI.react,
     reactDOM: typeof reactAPI.reactDOM,
     preact: typeof preact & { renderPreactInReact: typeof reactAPI.renderPreactInReact },

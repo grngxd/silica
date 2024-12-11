@@ -3,7 +3,7 @@ import { CancelablePromise, type Dispatcher } from "+silica/types/flux/dispatche
 import settings from "../settings";
 import { getWebpackChunkByExports } from "../webpack";
 
-const patcher = new Patcher();
+const p = new Patcher();
 let patched = false;
 let dispatcher: Dispatcher;
 
@@ -20,7 +20,7 @@ export const getDispatcher = (force = false): Dispatcher => {
 
     patched = true;
 
-    patcher.applyPatch(
+    p.applyPatch(
         dispatcher,
         "dispatch",
         (originalMethod) => {
@@ -31,11 +31,11 @@ export const getDispatcher = (force = false): Dispatcher => {
         }
     );
 
-    patcher.applyPatch(
+    p.applyPatch(
         dispatcher,
         "waitForDispatch",
         (originalMethod) => {
-            return function (this: Dispatcher, event: string): CancelablePromise<unknown> {
+            return function (this: Dispatcher, event: string) {
                 let unsubscribeFn: () => void;
                 let rejectFn!: (reason?: any) => void;
     
@@ -63,7 +63,7 @@ export const getDispatcher = (force = false): Dispatcher => {
 };
 
 export const unload = () => {
-    patcher.removeAllPatches(); 
+    p.removeAllPatches(); 
 }; 
 
 const api = getDispatcher;

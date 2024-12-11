@@ -16,6 +16,7 @@
   "license": "ISC",
   "gitHead": "bcfcb4d2c0fedfb33f655a41f7867465c04d67f1",
   "dependencies": {
+    "@emotion/css": "^11.13.5",
     "nanostores": "^0.11.3",
     "preact": "^10.25.1",
     "short-uuid": "^5.2.0"
